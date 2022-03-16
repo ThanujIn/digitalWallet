@@ -3,6 +3,7 @@ package com.digitalwallet.wallet.model;
 import javax.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "UniqueAccountId", columnNames = { "accountId"}))
 public class Account {
 
     

@@ -5,8 +5,7 @@ import com.digitalwallet.wallet.dto.PlayerDTO;
 import javax.persistence.*;
 
 @Entity
-@Table(uniqueConstraints =
-@UniqueConstraint(name = "UniqueName", columnNames = { "firstName", "lastName" }))
+@Table(uniqueConstraints = @UniqueConstraint(name = "UniqueName", columnNames = { "firstName", "lastName" }))
 public class Player {
 
     public Player(PlayerDTO playerDTO){

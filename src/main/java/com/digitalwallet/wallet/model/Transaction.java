@@ -1,11 +1,11 @@
 package com.digitalwallet.wallet.model;
 
-import com.digitalwallet.wallet.dto.PlayerDTO;
 import com.digitalwallet.wallet.dto.TransactionDTO;
 
 import javax.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "UniqueTransactionId", columnNames = { "uniqueId"}))
 public class Transaction {
 
     @Id
