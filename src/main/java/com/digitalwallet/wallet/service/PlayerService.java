@@ -23,15 +23,24 @@ public class PlayerService {
         return playerRepository.findById(playerId);
     }
 
-    public void addPlayer(@RequestBody PlayerDTO player){
-        Player newPlayer = playerRepository.save(new Player(player));
-        accountRepository.save(new Account(newPlayer.getId() * 1000));
+    public void addPlayer(@RequestBody PlayerDTO player) {
+        try{
+            Player newPlayer = playerRepository.save(new Player(player));
+            accountRepository.save(new Account(newPlayer.getId() * 1000));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public void deletePlayerById(Long playerId){
-        playerRepository.deleteById(playerId);
-        Account playerAccount = accountRepository.getById(playerId * 1000 + "");
-        playerAccount.setActive(false);
-        accountRepository.save(playerAccount);
+        try{
+            playerRepository.deleteById(playerId);
+            Account playerAccount = accountRepository.getById(playerId * 1000 + "");
+            playerAccount.setActive(false);
+            accountRepository.save(playerAccount);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

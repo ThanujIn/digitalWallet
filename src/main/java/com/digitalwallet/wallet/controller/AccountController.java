@@ -3,6 +3,8 @@ package com.digitalwallet.wallet.controller;
 import com.digitalwallet.wallet.model.Account;
 import com.digitalwallet.wallet.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +20,9 @@ public class AccountController {
     AccountService accountService;
 
     @GetMapping(path = "/getAccountById/{accountId}")
-    public Account getAccountById(@PathVariable("accountId") String accountId){
+    public ResponseEntity<Object> getAccountById(@PathVariable("accountId") String accountId){
         Optional<Account> account = accountService.getAccountById(accountId);
-        return account.orElse(null);
+        return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
     }
 
 }

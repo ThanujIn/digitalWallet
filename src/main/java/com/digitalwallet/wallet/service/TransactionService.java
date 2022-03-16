@@ -5,8 +5,6 @@ import com.digitalwallet.wallet.model.Transaction;
 import com.digitalwallet.wallet.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Optional;
 
@@ -20,7 +18,11 @@ public class TransactionService {
     }
 
     public void addTransaction(TransactionDTO transactionDTO){
-        transactionRepository.save(new Transaction(transactionDTO));
+        try{
+            transactionRepository.save(new Transaction(transactionDTO));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
 }
