@@ -23,8 +23,8 @@ public class TransactionController {
     }
 
     @PostMapping(path = "/addTransaction")
-    public void addTransaction(@RequestBody TransactionDTO transactionDTO){
-        transactionService.addTransaction(transactionDTO);
+    public ResponseEntity<Object> addTransaction(@RequestBody TransactionDTO transactionDTO){
+        return transactionService.addTransaction(transactionDTO);
     }
 
 }

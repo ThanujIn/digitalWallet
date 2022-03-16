@@ -16,4 +16,8 @@ public class AccountService {
         return accountRepository.findById(accountId);
     }
 
+    public Optional<Account> getAccountByPlayerId(String playerId){
+        return accountRepository.findById(Long.parseLong(playerId) * 1000 + "");
+    }
+
 }

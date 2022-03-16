@@ -6,6 +6,8 @@ import com.digitalwallet.wallet.model.Account;
 import com.digitalwallet.wallet.model.Player;
 import com.digitalwallet.wallet.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,24 +25,28 @@ public class PlayerService {
         return playerRepository.findById(playerId);
     }
 
-    public void addPlayer(@RequestBody PlayerDTO player) {
+    public ResponseEntity<Object> addPlayer(@RequestBody PlayerDTO player) {
         try{
             Player newPlayer = playerRepository.save(new Player(player));
             accountRepository.save(new Account(newPlayer.getId() * 1000));
+            return new ResponseEntity<>("Player registration successful and a new account created", HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
+            return new ResponseEntity<>("Player registration failed", HttpStatus.OK);
         }
 
     }
 
-    public void deletePlayerById(Long playerId){
+    public ResponseEntity<Object> deletePlayerById(Long playerId){
         try{
             playerRepository.deleteById(playerId);
             Account playerAccount = accountRepository.getById(playerId * 1000 + "");
             playerAccount.setActive(false);
             accountRepository.save(playerAccount);
+            return new ResponseEntity<>("Player deactivation successful", HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
+            return new ResponseEntity<>("Player deactivation failed", HttpStatus.OK);
         }
     }
 }

@@ -24,12 +24,12 @@ public class PlayerController {
     }
 
     @PostMapping(path = "/addPlayer")
-    public void addPlayer(@RequestBody PlayerDTO playerDTO){
-        playerService.addPlayer(playerDTO);
+    public ResponseEntity<Object> addPlayer(@RequestBody PlayerDTO playerDTO){
+        return playerService.addPlayer(playerDTO);
     }
 
     @DeleteMapping(path = "/deletePlayerById/{playerId}")
-    public void deletePlayerById(@PathVariable("playerId") String playerId){
-        playerService.deletePlayerById(Long.parseLong(playerId));
+    public ResponseEntity<Object> deletePlayerById(@PathVariable("playerId") String playerId){
+        return playerService.deletePlayerById(Long.parseLong(playerId));
     }
 }

@@ -25,4 +25,9 @@ public class AccountController {
         return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
     }
 
+    @GetMapping(path = "/getAccountByPlayerId/{playerId}")
+    public ResponseEntity<Object> getAccountByPlayerId(@PathVariable("playerId") String playerId){
+        Optional<Account> account = accountService.getAccountByPlayerId(playerId);
+        return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
+    }
 }
