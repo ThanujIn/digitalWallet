@@ -9,20 +9,19 @@ import javax.persistence.*;
 public class Transaction {
 
     @Id
-    private final String uniqueId;
-    private String type;
+    private String uniqueId;
+    private Boolean isCredit;
     private Double transactionAmount;
     @ManyToOne(targetEntity=Player.class, fetch= FetchType.EAGER)
     private Player player;
-    @ManyToOne(targetEntity=Account.class, fetch=FetchType.EAGER)
-    private Account account;
+
+    public Transaction(){}
 
     public Transaction(TransactionDTO transactionDTO){
         this.uniqueId = transactionDTO.getUniqueId();
-        this.type = transactionDTO.getType();
+        this.isCredit = transactionDTO.getIsCredit();
         this.transactionAmount = transactionDTO.getTransactionAmount();
         this.player = transactionDTO.getPlayer();
-        this.account = transactionDTO.getAccount();
     }
 
     public String getUniqueId() {
@@ -37,20 +36,12 @@ public class Transaction {
         this.player = player;
     }
 
-    public Account getAccount() {
-        return account;
+    public Boolean getIsCredit() {
+        return isCredit;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setIsCredit(Boolean isCredit) {
+        this.isCredit = isCredit;
     }
 
     public Double getTransactionAmount() {
@@ -61,7 +52,4 @@ public class Transaction {
         this.transactionAmount = transactionAmount;
     }
 
-    public Transaction(String uniqueId) {
-        this.uniqueId = uniqueId;
-    }
 }

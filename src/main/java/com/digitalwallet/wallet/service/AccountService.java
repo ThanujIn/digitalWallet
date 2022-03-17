@@ -13,11 +13,11 @@ public class AccountService {
     AccountRepository accountRepository;
 
     public Optional<Account> getAccountById(String accountId){
-        return accountRepository.findById(accountId);
+        return accountRepository.findById(Long.parseLong(accountId));
     }
 
     public Optional<Account> getAccountByPlayerId(String playerId){
-        return accountRepository.findById(Long.parseLong(playerId) * 1000 + "");
+        return accountRepository.findById(Long.parseLong(playerId) * 1000);
     }
 
 }

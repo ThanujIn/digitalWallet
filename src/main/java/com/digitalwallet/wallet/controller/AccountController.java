@@ -22,12 +22,12 @@ public class AccountController {
     @GetMapping(path = "/getAccountById/{accountId}")
     public ResponseEntity<Object> getAccountById(@PathVariable("accountId") String accountId){
         Optional<Account> account = accountService.getAccountById(accountId);
-        return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
+        return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND));
     }
 
     @GetMapping(path = "/getAccountByPlayerId/{playerId}")
     public ResponseEntity<Object> getAccountByPlayerId(@PathVariable("playerId") String playerId){
         Optional<Account> account = accountService.getAccountByPlayerId(playerId);
-        return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
+        return account.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(new ResponseEntity<>("Account not found", HttpStatus.NOT_FOUND));
     }
 }

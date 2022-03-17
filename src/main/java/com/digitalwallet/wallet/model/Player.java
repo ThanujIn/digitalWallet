@@ -8,11 +8,13 @@ import javax.persistence.*;
 @Table(uniqueConstraints = @UniqueConstraint(name = "UniqueName", columnNames = { "firstName", "lastName" }))
 public class Player {
 
+    public Player(){}
     public Player(PlayerDTO playerDTO){
         this.id = playerDTO.getId();
         this.firstName = playerDTO.getFirstName();
         this.lastName = playerDTO.getLastName();
         this.account = playerDTO.getAccount();
+        this.isActive = true;
     }
 
     public Long getId() {
@@ -47,11 +49,20 @@ public class Player {
         this.account = account;
     }
 
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String firstName;
     private String lastName;
+    private Boolean isActive;
     @OneToOne
     @JoinColumn(name = "accountId")
     private Account account;

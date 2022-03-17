@@ -20,7 +20,7 @@ public class PlayerController {
     @GetMapping(path = "/getPlayerById/{playerId}")
     public ResponseEntity<Object> getPlayerById(@PathVariable("playerId") String playerId){
         Optional<Player> player = playerService.getPlayerById(Long.parseLong(playerId));
-        return player.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
+        return player.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(new ResponseEntity<>("Player not found", HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(path = "/addPlayer")

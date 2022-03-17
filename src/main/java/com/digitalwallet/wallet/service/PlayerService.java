@@ -27,26 +27,47 @@ public class PlayerService {
 
     public ResponseEntity<Object> addPlayer(@RequestBody PlayerDTO player) {
         try{
-            Player newPlayer = playerRepository.save(new Player(player));
-            accountRepository.save(new Account(newPlayer.getId() * 1000));
-            return new ResponseEntity<>("Player registration successful and a new account created", HttpStatus.OK);
+            Player existingPlayer = findByFirstNameAndLastName(player.getFirstName(), player.getLastName());
+            if(existingPlayer != null && !existingPlayer.getActive()){
+                existingPlayer.setActive(true);
+                playerRepository.save(existingPlayer);
+                Account acc = existingPlayer.getAccount();
+                acc.setActive(true);
+                accountRepository.save(acc);
+                return new ResponseEntity<>("Activated already existed player", HttpStatus.OK);
+            }else{
+                Player newPlayer = playerRepository.save(new Player(player));
+                Account playerDefaultAccount = new Account(newPlayer.getId() * 1000L);
+                playerDefaultAccount.setPlayer(newPlayer);
+                playerDefaultAccount.setActive(true);
+                accountRepository.save(playerDefaultAccount);
+                newPlayer.setAccount(playerDefaultAccount);
+                playerRepository.save(newPlayer);
+                return new ResponseEntity<>("Player registration successful and a new account created", HttpStatus.OK);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>("Player registration failed", HttpStatus.OK);
+            return new ResponseEntity<>("Player registration failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
+    private Player findByFirstNameAndLastName(String firstName, String lastName){
+        return playerRepository.findByFirstNameAndLastName(firstName, lastName);
     }
 
     public ResponseEntity<Object> deletePlayerById(Long playerId){
         try{
-            playerRepository.deleteById(playerId);
-            Account playerAccount = accountRepository.getById(playerId * 1000 + "");
+            Account playerAccount = accountRepository.getById(playerId * 1000L);
             playerAccount.setActive(false);
             accountRepository.save(playerAccount);
+            Player player = playerRepository.getById(playerId);
+            player.setActive(false);
+            playerRepository.save(player);
             return new ResponseEntity<>("Player deactivation successful", HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseEntity<>("Player deactivation failed", HttpStatus.OK);
+            return new ResponseEntity<>("Player deactivation failed", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.digitalwallet.wallet.dto;
 
-import com.digitalwallet.wallet.model.Account;
 import com.digitalwallet.wallet.model.Player;
 
 public class TransactionDTO {
@@ -13,12 +12,12 @@ public class TransactionDTO {
         this.uniqueId = uniqueId;
     }
 
-    public String getType() {
-        return type;
+    public Boolean getIsCredit() {
+        return isCredit;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setIsCredit(Boolean isCredit) {
+        this.isCredit = isCredit;
     }
 
     public Double getTransactionAmount() {
@@ -37,18 +36,9 @@ public class TransactionDTO {
         this.player = player;
     }
 
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
-        this.account = account;
-    }
-
     private String uniqueId;
-    private String type;
+    private Boolean isCredit;
     private Double transactionAmount;
     private Player player;
-    private Account account;
 
 }

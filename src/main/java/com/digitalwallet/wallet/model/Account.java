@@ -1,12 +1,14 @@
 package com.digitalwallet.wallet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(name = "UniqueAccountId", columnNames = { "accountId"}))
 public class Account {
+    public Account(){}
 
-    
     public Account(Long accountId) {
         this.accountId = accountId;
     }
@@ -24,11 +26,11 @@ public class Account {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private final Long accountId;
+    private Long accountId;
     private Double balance = 0.0;
     @OneToOne
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Player player;
     private Boolean isActive;
 

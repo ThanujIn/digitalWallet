@@ -19,7 +19,7 @@ public class TransactionController {
     @GetMapping(path = "/getTransactionById/{transactionId}")
     public ResponseEntity<Object> getTransactionById(@PathVariable("transactionId") String transactionId){
         Optional<Transaction> transaction = transactionService.getTransactionById(transactionId);
-        return transaction.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(null);
+        return transaction.<ResponseEntity<Object>>map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElse(new ResponseEntity<>("Transaction not found", HttpStatus.NOT_FOUND));
     }
 
     @PostMapping(path = "/addTransaction")
