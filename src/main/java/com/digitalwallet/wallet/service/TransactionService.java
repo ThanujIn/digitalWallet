@@ -33,7 +33,7 @@ public class TransactionService {
         try{
             if(transactionDTO.getTransactionAmount() > 0.0){
                 Optional<Player> player = playerRepository.findById(transactionDTO.getPlayer().getId());
-                if(player.isPresent()){
+                if(player.isPresent() && Boolean.TRUE.equals(player.get().getActive())){
                     Date date = new Date();
                     transactionDTO.setUniqueId("trans" + player.get().getId() + transactionDTO.getIsCredit() + date.getTime());
                     Transaction transaction = new Transaction(transactionDTO);
@@ -42,8 +42,10 @@ public class TransactionService {
                     ResponseEntity<Object> response = validateTransaction(transactionDTO, transaction, acc);
                     if (response != null) return response;
                     return new ResponseEntity<>("Transaction added successfully", HttpStatus.OK);
+                }else if(player.isPresent() && Boolean.FALSE.equals(player.get().getActive())){
+                    return new ResponseEntity<>("Transaction registration failed : Player not ACTIVE", HttpStatus.NOT_FOUND);
                 }else {
-                    return new ResponseEntity<>("Transaction registration failed : Player not found", HttpStatus.NOT_FOUND);
+                    return new ResponseEntity<>("Transaction registration failed : Player not Found", HttpStatus.NOT_FOUND);
                 }
             }else{
                 return new ResponseEntity<>("Transaction amount is not valid", HttpStatus.BAD_REQUEST);
