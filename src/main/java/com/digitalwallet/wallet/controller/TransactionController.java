@@ -27,4 +27,9 @@ public class TransactionController {
         return transactionService.addTransaction(transactionDTO);
     }
 
+    @GetMapping(path = "/getTransactionsByPlayerId/{playerId}")
+    public ResponseEntity<Object> getTransactionsByPlayerId(@PathVariable("playerId") String playerId){
+        return transactionService.getTransactionsByPlayerId(playerId);
+    }
+
 }

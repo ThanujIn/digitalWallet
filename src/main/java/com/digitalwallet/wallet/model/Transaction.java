@@ -12,6 +12,7 @@ public class Transaction {
     private String uniqueId;
     private Boolean isCredit;
     private Double transactionAmount;
+    private Double balanceAfterTransaction;
     @ManyToOne(targetEntity=Player.class, fetch= FetchType.EAGER)
     private Player player;
 
@@ -22,6 +23,14 @@ public class Transaction {
         this.isCredit = transactionDTO.getIsCredit();
         this.transactionAmount = transactionDTO.getTransactionAmount();
         this.player = transactionDTO.getPlayer();
+    }
+
+    public Double getBalanceAfterTransaction() {
+        return balanceAfterTransaction;
+    }
+
+    public void setBalanceAfterTransaction(Double balanceAfterTransaction) {
+        this.balanceAfterTransaction = balanceAfterTransaction;
     }
 
     public String getUniqueId() {

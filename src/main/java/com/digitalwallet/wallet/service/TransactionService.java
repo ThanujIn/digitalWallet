@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Date;
 
@@ -38,24 +39,8 @@ public class TransactionService {
                     Transaction transaction = new Transaction(transactionDTO);
                     transaction.setPlayer(player.get());
                     Optional<Account> acc = accountRepository.findById(player.get().getId() * 1000L);
-                    if(acc.isPresent()){
-                        Account transactionAccount = acc.get();
-                        if(transactionDTO.getIsCredit()){
-                            transactionAccount.setBalance(transactionAccount.getBalance() + transactionDTO.getTransactionAmount());
-                            transactionRepository.save(transaction);
-                            accountRepository.save(transactionAccount);
-                            return new ResponseEntity<>("Credit transaction added successfully", HttpStatus.OK);
-                        }else{
-                            if(transactionAccount.getBalance() >= transactionDTO.getTransactionAmount()){
-                                transactionAccount.setBalance(transactionAccount.getBalance() - transactionDTO.getTransactionAmount());
-                                transactionRepository.save(transaction);
-                                accountRepository.save(transactionAccount);
-                                return new ResponseEntity<>("Debit transaction added successfully", HttpStatus.OK);
-                            }else {
-                                return new ResponseEntity<>("Balance insufficient for the debit transaction", HttpStatus.BAD_REQUEST);
-                            }
-                        }
-                    }
+                    ResponseEntity<Object> response = validateTransaction(transactionDTO, transaction, acc);
+                    if (response != null) return response;
                     return new ResponseEntity<>("Transaction added successfully", HttpStatus.OK);
                 }else {
                     return new ResponseEntity<>("Transaction registration failed : Player not found", HttpStatus.NOT_FOUND);
@@ -70,4 +55,36 @@ public class TransactionService {
         }
     }
 
+    private ResponseEntity<Object> validateTransaction(TransactionDTO transactionDTO, Transaction transaction, Optional<Account> acc) {
+        if(acc.isPresent()){
+            Account transactionAccount = acc.get();
+            if(Boolean.TRUE.equals(transactionDTO.getIsCredit())){
+                transactionAccount.setBalance(transactionAccount.getBalance() + transactionDTO.getTransactionAmount());
+                transaction.setBalanceAfterTransaction(transactionAccount.getBalance());
+                transactionRepository.save(transaction);
+                accountRepository.save(transactionAccount);
+                return new ResponseEntity<>("Credit transaction added successfully", HttpStatus.OK);
+            }else{
+                if(transactionAccount.getBalance() >= transactionDTO.getTransactionAmount()){
+                    transactionAccount.setBalance(transactionAccount.getBalance() - transactionDTO.getTransactionAmount());
+                    transaction.setBalanceAfterTransaction(transactionAccount.getBalance());
+                    transactionRepository.save(transaction);
+                    accountRepository.save(transactionAccount);
+                    return new ResponseEntity<>("Debit transaction added successfully", HttpStatus.OK);
+                }else {
+                    return new ResponseEntity<>("Balance insufficient for the debit transaction", HttpStatus.BAD_REQUEST);
+                }
+            }
+        }
+        return null;
+    }
+
+    public ResponseEntity<Object> getTransactionsByPlayerId(String playerId){
+        List<Transaction> transaction = transactionRepository.getTransactionsByPlayerId(Long.parseLong(playerId));
+        if(!transaction.isEmpty()){
+            return new ResponseEntity<>(transaction, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("No transactions for requested player", HttpStatus.OK);
+        }
+    }
 }
